@@ -7,6 +7,7 @@ from distutils.dir_util import mkpath
 SECONDS_IN_HOUR = 60 * 60
 SECONDS_IN_DAY = SECONDS_IN_HOUR * 24
 
+# Standard file extensions for different types of SUMO file.
 EXTENSIONS = {
     'network': '.net.xml',
     'trips': '.trips.xml',
@@ -24,9 +25,10 @@ def convert_osm_to_sumo(osm_network):
 
 
 def generate_random_routes(job):
-    # TODO(orlade): Implement route generation.
-    sumo_home = 'C:/opt/sumo'
-    trip_generator = '%s/tools/trip/randomTrips.py' % sumo_home
+    """
+    Generates a random trips file for the network of the given job.
+    """
+    trip_generator = '$SUMO_HOME/tools/trip/randomTrips.py'
     [net_path, out_path, routes_path] = [build_data_filename(job, t) for t in ('network', 'output', 'routes')]
     print 'Generating routes to %s...' % routes_path
     args = ['python', trip_generator, '-e', str(SECONDS_IN_DAY), '-n', net_path, '-o', out_path, '-r', routes_path]
