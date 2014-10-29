@@ -28,7 +28,7 @@ def generate_random_routes(job):
     """
     Generates a random trips file for the network of the given job.
     """
-    trip_generator = '$SUMO_HOME/tools/trip/randomTrips.py'
+    trip_generator = '%s/tools/trip/randomTrips.py' % os.environ['SUMO_HOME']
     [net_path, out_path, routes_path] = [build_data_filename(job, t) for t in ('network', 'output', 'routes')]
     print 'Generating routes to %s...' % routes_path
     args = ['python', trip_generator, '-e', str(SECONDS_IN_DAY), '-n', net_path, '-o', out_path, '-r', routes_path]
