@@ -4,8 +4,8 @@ import os
 import subprocess
 from distutils.dir_util import mkpath
 
+SECONDS_IN_MINUTE = 60
 SECONDS_IN_HOUR = 60 * 60
-SECONDS_IN_DAY = SECONDS_IN_HOUR * 24
 
 # Standard file extensions for different types of SUMO file.
 EXTENSIONS = {
@@ -31,7 +31,7 @@ def generate_random_routes(job):
     trip_generator = '%s/tools/trip/randomTrips.py' % os.environ['SUMO_HOME']
     [net_path, out_path, routes_path] = [build_data_filename(job, t) for t in ('network', 'output', 'routes')]
     print 'Generating routes to %s...' % routes_path
-    args = ['python', trip_generator, '-e', str(SECONDS_IN_DAY), '-n', net_path, '-o', out_path, '-r', routes_path]
+    args = ['python', trip_generator, '-e', str(SECONDS_IN_HOUR), '-n', net_path, '-o', out_path, '-r', routes_path]
     output = subprocess.call(args)
     print 'Generated routes: %s' % output
     return output
@@ -39,7 +39,7 @@ def generate_random_routes(job):
 
 def generate_output_spec(output_file_path):
     # Generates the XML for an additional file to request output.
-    return '<edgeData id="traffic" file="%s" freq="%d"/>' % (output_file_path, SECONDS_IN_HOUR)
+    return '<edgeData id="traffic" file="%s" freq="%d"/>' % (output_file_path, SECONDS_IN_MINUTE)
 
 
 def build_data_filename(job, filetype):

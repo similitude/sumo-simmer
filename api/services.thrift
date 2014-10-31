@@ -16,19 +16,11 @@ service SumoService {
   )
 
   /**
-   * Simulates traffic for a day with random trips on the given network, with hourly output.
+   * Simulates traffic for an hour with random trips on the given network, with minutely output.
    */
-  xml randomDayHourly(
+  xml randomHourMinutes(
     /** The contents of the .net.xml file. */
     1:xml network
-  )
-
-  /**
-   * Simulates traffic for a day with random trips on the given OSM network, with hourly output.
-   */
-  xml randomDayHourlyOsm(
-    /** The contents of the .osm file. */
-    1:xml osm_network
   )
 
 }

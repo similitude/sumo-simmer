@@ -1,7 +1,7 @@
 import os
 import sys
 from util import write_to_file, build_data_filename, generate_random_routes, generate_output_spec, \
-    SECONDS_IN_DAY, read_file, convert_osm_to_sumo
+    SECONDS_IN_HOUR, read_file, convert_osm_to_sumo
 
 import subprocess
 import uuid
@@ -68,9 +68,9 @@ class SumoServiceHandler():
 
         return str(output)
 
-    def randomDayHourly(self, network):
+    def randomHourMinutes(self, network):
         """
-        Simulates traffic for a day with random trips on the given network, with hourly output.
+        Simulates traffic for an hour with random trips on the given network, with minutely output.
 
         Parameters:
          - network: The contents of the .net.xml file.
@@ -92,7 +92,7 @@ class SumoServiceHandler():
             '--route-files': route_file_path,  # Route input file.
             '--additional-files': adtl_file_path,  # Additional file specifying output format.
             '--begin': 0,  # Time to begin the simulation.
-            '--end': SECONDS_IN_DAY,  # Time to end the simulation.
+            '--end': SECONDS_IN_HOUR,  # Time to end the simulation.
             '--time-to-teleport': -1,  # Disable teleportation for vehicles that get stuck.
             '-W': None,  # Disable warning messages.
         }
@@ -103,15 +103,6 @@ class SumoServiceHandler():
             return return_code
 
         return read_file(output_file_path)
-
-    def randomDayHourlyOsm(self, osm_network):
-        """
-        Simulates traffic for a day with random trips on the given OSM network, with hourly output.
-
-        Parameters:
-         - osm_network: The contents of the .osm file.
-        """
-        return self.randomDayHourly(convert_osm_to_sumo(osm_network))
 
 
 if __name__ == "__main__":
