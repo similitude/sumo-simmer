@@ -1,6 +1,9 @@
 SUMO Simmer Package
 ===================
 
+[![Build Status](https://travis-ci.org/similitude/sumo-simmer.svg)](https://travis-ci.org/similitude/sumo-simmer)
+[![Coverage Status](https://coveralls.io/repos/similitude/sumo-simmer/badge.png?branch=master)](https://coveralls.io/r/similitude/sumo-simmer?branch=master)
+
 A Simmer package for the SUMO traffic simulation package.
 
 > "Simulation of Urban MObility" (SUMO) is an open source, highly portable,
