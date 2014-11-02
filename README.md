@@ -3,6 +3,7 @@ SUMO Simmer Package
 
 [![Build Status](https://travis-ci.org/similitude/sumo-simmer.svg)](https://travis-ci.org/similitude/sumo-simmer)
 [![Coverage Status](https://coveralls.io/repos/similitude/sumo-simmer/badge.png?branch=master)](https://coveralls.io/r/similitude/sumo-simmer?branch=master)
+[![DOI](https://zenodo.org/badge/6943/similitude/sumo-simmer.png)](http://dx.doi.org/10.5281/zenodo.12526)
 
 A Simmer package for the SUMO traffic simulation package.
 
