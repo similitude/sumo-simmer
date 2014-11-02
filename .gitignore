@@ -1,2 +1,7 @@
-*.pyc
-*.*~
+*.py[co]
+*~
+
+/example/*.rou.
+
+/.idea
+/.coverage

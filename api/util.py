@@ -18,10 +18,13 @@ EXTENSIONS = {
 }
 
 
-def convert_osm_to_sumo(osm_network):
-    # TODO(orlade): Implement conversion via netconvert.
-    network = ''
-    return network
+def build_clargs(arg_dict):
+    """
+    Converts a map of command-line flags and values into a string of
+    command-line inputs.
+    """
+    items = reduce(lambda xs, (k, v): xs + [k, v], arg_dict.items(), [])
+    return map(str, filter(lambda x: x not in (None, ''), items))
 
 
 def generate_random_routes(job):
@@ -29,21 +32,28 @@ def generate_random_routes(job):
     Generates a random trips file for the network of the given job.
     """
     trip_generator = '%s/tools/trip/randomTrips.py' % os.environ['SUMO_HOME']
-    [net_path, out_path, routes_path] = [build_data_filename(job, t) for t in ('network', 'output', 'routes')]
-    print 'Generating routes to %s...' % routes_path
-    args = ['python', trip_generator, '-e', str(SECONDS_IN_HOUR), '-n', net_path, '-o', out_path, '-r', routes_path]
-    output = subprocess.call(args)
-    print 'Generated routes: %s' % output
-    return output
+    args = {
+        '-e': SECONDS_IN_HOUR,
+        '-n': build_data_filename(job, 'network'),
+        '-o': build_data_filename(job, 'output'),
+        '-r': build_data_filename(job, 'routes'),
+    }
+    print 'Generating routes to %s...' % args['-r']
+    return subprocess.call(['python', trip_generator] + build_clargs(args))
 
 
 def generate_output_spec(output_file_path):
-    # Generates the XML for an additional file to request output.
-    return '<edgeData id="traffic" file="%s" freq="%d"/>' % (output_file_path, SECONDS_IN_MINUTE)
+    """
+    Generates the XML for an additional file to request output every minute
+    """
+    return '<edgeData id="traffic" file="%s" freq="60"/>' % output_file_path
 
 
 def build_data_filename(job, filetype):
-    path = '/data/%s%s' % (job, EXTENSIONS[filetype])
+    """
+    Generates an absolute path to a file for the job and type.
+    """
+    path = '/tmp/%s/data%s' % (job, EXTENSIONS[filetype])
     return os.path.abspath(path)
 
 
@@ -55,9 +65,11 @@ def write_to_file(filename, content):
     mkpath(os.path.dirname(filename))
     with open(filename, 'w') as f:
         f.write(content)
-    return filename
 
 
 def read_file(filename):
+    """
+    Returns the content of the given filename as a string.
+    """
     with open(filename, 'r') as f:
         return f.read()

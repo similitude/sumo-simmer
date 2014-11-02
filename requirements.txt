@@ -1,0 +1,2 @@
+PyHamcrest==1.8.0
+lxml==3.3.3

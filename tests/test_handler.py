@@ -1,52 +1,53 @@
 import os
 from hamcrest.core import assert_that
 from hamcrest.core.core.isequal import equal_to
-from sumo.api.handler import build_clargs
-from sumo.api.handler import SumoServiceHandler
 
-from sumo.api.util import SECONDS_IN_HOUR
+from api.handler import SumoServiceHandler
+from api.util import build_clargs
 
 
 def test_build_clargs():
-    clargs = {
+    args = {
         '--net-file': '/path/to/file',
         '--begin': 0,
         '-W': None,
     }
-    args = ' '.join(build_clargs(clargs))
-    assert_that(args, equal_to('sumo -W --net-file /path/to/file --begin 0'))
+    arg_str = ' '.join(build_clargs(args))
+    assert_that('-W' in arg_str)
+    assert_that('--net-file /path/to/file' in arg_str)
+    assert_that('--begin 0' in arg_str)
 
 
 def test_call_sumo():
+    """
+    Invokes SUMO to test that it is available.
+
+    Set environment variable CI=true in continuous integration to skip.
+    """
+    if os.environ.get('CI'):  # pragma: no cover
+        return
+
     output = SumoServiceHandler().call({})
-    print output
     assert output['cli'].startswith('SUMO sumo Version ')
 
 
 def test_call_sumo_data():
     """
     Invokes SUMO with pre-calculated data for the Eichstaett network.
+
+    Set environment variable CI=true in continuous integration to skip.
     """
+    if os.environ.get('CI'):  # pragma: no cover
+        return
+
+    example_dir = os.path.join(os.path.dirname(__file__), '..', 'example')
     output = SumoServiceHandler().call({
-        '--net-file': os.path.abspath('../../example/eich.net.xml'),
-        '--route-files': os.path.abspath('../../example/eich.rou.xml'),
+        '--net-file': os.path.join(example_dir, 'eich.net.xml'),
+        '--route-files': os.path.join(example_dir, 'eich.rou.xml'),
         '--begin': 0,
-        '--end': SECONDS_IN_HOUR,
+        '--end': 120,  # Two minutes
         '--time-to-teleport': -1,
         '-W': None,
     })
     # TODO: Return written output.
-    assert_that(output['data'].count('<edge'), equal_to(1177))
-
-
-# def test_randomDayHourly():
-# xml_path = 'C:\dev\workspace\computome\sumo\example\quickstart.net.xml'
-#     with open(xml_path, 'r') as f:
-#         xml = f.read()
-#         output = SumoServiceHandler().randomDayHourly(xml)
-#     print output
-#     assert output.startswith('<')
-
-
-def test_randomDayHourlyOsm():
-    return
+    assert_that(output['data'].count('<edge'), equal_to(2354))
