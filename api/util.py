@@ -4,7 +4,6 @@ import os
 import subprocess
 from distutils.dir_util import mkpath
 
-SECONDS_IN_MINUTE = 60
 SECONDS_IN_HOUR = 60 * 60
 
 # Standard file extensions for different types of SUMO file.
@@ -54,10 +53,11 @@ def build_data_filename(job, filetype):
     Generates an absolute path to a file for the job and type.
     """
     path = '/tmp/%s/data%s' % (job, EXTENSIONS[filetype])
+    mkpath(os.path.dirname(path))
     return os.path.abspath(path)
 
 
-def write_to_file(filename, content):
+def write_file(filename, content):
     """
     Writes the given content to the given file.
     """
@@ -65,11 +65,3 @@ def write_to_file(filename, content):
     mkpath(os.path.dirname(filename))
     with open(filename, 'w') as f:
         f.write(content)
-
-
-def read_file(filename):
-    """
-    Returns the content of the given filename as a string.
-    """
-    with open(filename, 'r') as f:
-        return f.read()

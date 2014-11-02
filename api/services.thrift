@@ -4,13 +4,12 @@
 service SumoService {
 
   /**
-   * Invokes SUMO from the command line. Returns a map containing a key 'cli'
-   * for the data printed to stdout, and 'data' for the contents of the output
-   * file, if any.
+   * Invokes SUMO from the command line. Directs output into a temporary file
+   * and returns the contents.
    *
    * @param network The command line arguments.
    */
-  map<string, string> call(1:map<string, string> clargs)
+  string call(1:map<string, string> clargs)
 
   /**
    * Simulates traffic for an hour with random trips on the given network, with
@@ -18,6 +17,6 @@ service SumoService {
    *
    * @param network The contents of the .net.xml file.
    */
-  map<string, string> randomHourMinutes(1:string network)
+  string randomHourMinutes(1:string network)
 
 }
